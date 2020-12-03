@@ -29,8 +29,8 @@ $ echo 2 > /dev/myled0
 $ echo 3 > /dev/myled0
 
 ###デバイスドライバのアンインストール
-$ sudo rmmod myled.ko
-```
+$ sudo rmmod mylledo
+
 echo 1でLED点灯,echo 0でLED消灯
 echo 2でLEDが1秒間隔で点滅
 echo 3でLEDが2秒間隔で点滅
