@@ -5,10 +5,10 @@
 ### 概要
 Raspberry piとLEDランプを用いてLEDを点灯・点滅させる.
 
-echo 1でLED点灯
-echo 0でLED消灯
-echo 2でLEDが1秒間隔で点滅
-echo 3でLEDが2秒間隔で点滅
+echo 1でLED点灯,
+echo 0でLED消灯,
+echo 2でLEDが1秒間隔で点滅,
+echo 3でLEDが2秒間隔で点滅.
 
 
 ### 動作環境
