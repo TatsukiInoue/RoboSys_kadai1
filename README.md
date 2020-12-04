@@ -29,10 +29,11 @@ $ sudo chmod 666 /dev/myled0
 ```
 ### 実行方法
 ```
-$ echo 1 > /dev/myled0
-$ echo 0 > /dev/myled0
-$ echo 2 > /dev/myled0
-$ echo 3 > /dev/myled0
+
+点灯：$ echo 1 > /dev/myled0
+消灯：$ echo 0 > /dev/myled0
+1秒間隔で点滅：$ echo 2 > /dev/myled0
+２秒間隔で点滅：$ echo 3 > /dev/myled0
 ```
 ### デバイスドライバのアンインストール
 ```
