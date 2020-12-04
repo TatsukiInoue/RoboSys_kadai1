@@ -27,12 +27,13 @@ $ sudo insmod myled.ko
 $ sudo chmod 666 /dev/myled0
 ```
 ### 実行方法
-`
+```
 $ echo 1 > /dev/myled0
 $ echo 0 > /dev/myled0
 $ echo 2 > /dev/myled0
 $ echo 3 > /dev/myled0
-
+```
 ### デバイスドライバのアンインストール
+```
 $ sudo rmmod mylledo
 
