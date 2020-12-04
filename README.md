@@ -36,7 +36,7 @@ $ echo 3 > /dev/myled0
 ```
 ### デバイスドライバのアンインストール
 ```
-$ sudo rmmod myled0
+$ sudo rmmod myled
 
 ```
 ### 動画のリンク
