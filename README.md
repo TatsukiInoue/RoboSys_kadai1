@@ -3,7 +3,11 @@
 2020ロボットシステム学_課題１
 
 ### 概要
-Raspberry piとLEDランプを用いてLEDを点灯・点滅させるプログラム．
+Raspberry piとLEDランプを用いてLEDを点灯・点滅させる.
+echo 1でLED点灯,echo 0でLED消灯
+echo 2でLEDが1秒間隔で点滅
+echo 3でLEDが2秒間隔で点滅
+
 
 ### 動作環境
 |||
@@ -20,17 +24,16 @@ $ cd myled
 $ make
 $ sudo insmod myled.ko
 $ sudo chmod 666 /dev/myled0
-
-### 実行方法
-
+```
+実行方法
+`
 $ echo 1 > /dev/myled0
 $ echo 0 > /dev/myled0
 $ echo 2 > /dev/myled0
 $ echo 3 > /dev/myled0
 
-###デバイスドライバのアンインストール
+
+デバイスドライバのアンインストール
+
 $ sudo rmmod mylledo
 
-echo 1でLED点灯,echo 0でLED消灯
-echo 2でLEDが1秒間隔で点滅
-echo 3でLEDが2秒間隔で点滅
