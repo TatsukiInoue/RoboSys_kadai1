@@ -1,0 +1,718 @@
+# この viminfo ファイルは Vim 8.1 によって生成されました.
+# 変更する際には十分注意してください!
+
+# Viminfo version
+|1,4
+
+# このファイルが書かれた時の 'encoding' の値
+*encoding=utf-8
+
+
+# hlsearch on (H) or off (h):
+~h
+# 最後の 検索パターン:
+~Msle0~/\<include\>
+
+# 最後に置換された文字列:
+$
+
+# コマンドライン 項目の履歴 (新しいものから古いものへ):
+:q!
+|2,0,1607045148,,"q!"
+:q
+|2,0,1607045145,,"q"
+:wq
+|2,0,1607044595,,"wq"
+:w
+|2,0,1607004846,,"w"
+
+# 検索文字列 項目の履歴 (新しいものから古いものへ):
+? \<include\>
+|2,1,1607002074,,"\\<include\\>"
+? @$
+|2,1,1606541259,,"@$"
+
+# 式 項目の履歴 (新しいものから古いものへ):
+
+# 入力行 項目の履歴 (新しいものから古いものへ):
+
+# デバッグ行 項目の履歴 (新しいものから古いものへ):
+
+# レジスタ:
+"0	LINE	0
+	module_exit(cleanup_mod);
+	
+|3,0,0,1,2,0,1606541259,"module_exit(cleanup_mod);",""
+""1	LINE	0
+				add_timer(&d->timer);
+		}
+	}
+	static ssize_t led_write(struct file* filp, const char* buf, size_t count, loff_t* pos)
+	{	
+		char c;
+		if(copy_from_user(&c,buf,sizeof(char)))
+			return -EFAULT;
+	
+		if(c == '0')
+			gpio_base[10] = 1 << 25;
+		else if(c == '1'){
+			on_off();
+	}
+	        return 1;
+	}
+	
+	static struct file_operations led_fops = {
+		.owner = THIS_MODULE,
+		.write = led_write
+	};
+	
+	static int __init init_mod(void)
+	{
+	
+		const u32 led = 25;
+		int retval;
+		const u32 index = led/10;//GPFSEL2
+		const u32 shift = (led%10)*3;//15bit
+		const u32 mask = ~(0x7 << shift);//11111111111111000111111111111111
+	
+		gpio_base = ioremap_nocache(0x3f200000, 0xA0); //0x3f..:base address, 0xA0: region to map
+	
+		gpio_base[index] = (gpio_base[index] & mask) | (0x1 << shift);//001: output flag
+		//11111111111111001111111111111111
+		
+		retval =  alloc_chrdev_region(&dev, 0, 1, "myled");
+		if(retval < 0){
+			printk(KERN_ERR "alloc_chrdev_region failed.\n");
+			return retval;
+		}
+|3,1,1,1,41,0,1606995145,"			add_timer(&d->timer);","	}","}","static ssize_t led_write(struct file* filp, const char* buf, size_t count, loff_t* pos)","{	","	char c;","	if(copy_from_user(&c,buf,sizeof(char)))","		return -EFAULT;","","	if(c == '0')","		gpio_base[10] = 1 << 25;","	else if(c == '1'){","		on_off();","}","        return 1;","}","","static struct file_operations led_fops = {","	.owner = THIS_MODULE,","	.write = led_write","};","",>34
+|<"static int __init init_mod(void)","{","","	const u32 led = 25;","	int retval;","	const u32 index = led/10;//GPFSEL2","	const u32 shift = (led%10)*3;//15bit","	const u32 mask = ~(0x7 << shift);//11111111111111000111111111111111","","	gpio_base = ioremap_nocache(0x3f200000, 0xA0); //0x3f..:base address, 0xA0: region to map","","	gpio_base[index] = (gpio_base[index] & mask) | (0x1 << shift);//001: output flag","	//11111111111111001111111111111111","	",>56
+|<"	retval =  alloc_chrdev_region(&dev, 0, 1, \"myled\");","	if(retval < 0){","		printk(KERN_ERR \"alloc_chrdev_region failed.\\n\");","		return retval;","	}"
+"2	LINE	0
+		printk(KERN_INFO "%s is loaded. major:%d\n",__FILE__,MAJOR(dev));
+	
+		cdev_init(&cdv, &led_fops);
+		cdv.owner = THIS_MODULE;
+		retval = cdev_add(&cdv, dev, 1);
+		if(retval < 0){
+			printk(KERN_ERR "cdev_add failed. major:%d, minor:%d",MAJOR(dev),MINOR(dev));
+			return retval;
+		}
+	
+		cls = class_create(THIS_MODULE,"myled");
+		if(IS_ERR(cls)){
+			printk(KERN_ERR "class_create failed.");
+			return PTR_ERR(cls);
+		}
+		device_create(cls, NULL, dev, NULL, "myled%d",MINOR(dev));
+	
+		return 0;
+	}
+	
+	static void __exit cleanup_mod(void)
+	{	
+		int i;
+	
+	        for (i = 0; i < 2; i++) {
+	                del_timer(&data[i].timer);
+	        }
+		cdev_del(&cdv);
+		device_destroy(cls, dev);
+		class_destroy(cls);
+		unregister_chrdev_region(dev, 1);
+		printk(KERN_INFO "%s is unloaded. major:%d\n",__FILE__,MAJOR(dev));
+	}
+	
+	module_init(init_mod);
+	module_exit(cleanup_mod);
+|3,0,2,1,36,0,1606995135,"	printk(KERN_INFO \"%s is loaded. major:%d\\n\",__FILE__,MAJOR(dev));","","	cdev_init(&cdv, &led_fops);","	cdv.owner = THIS_MODULE;","	retval = cdev_add(&cdv, dev, 1);","	if(retval < 0){","		printk(KERN_ERR \"cdev_add failed. major:%d, minor:%d\",MAJOR(dev),MINOR(dev));","		return retval;","	}","","	cls = class_create(THIS_MODULE,\"myled\");","	if(IS_ERR(cls)){","		printk(KERN_ERR \"class_create failed.\");","		return PTR_ERR(cls);",>4
+|<"	}","	device_create(cls, NULL, dev, NULL, \"myled%d\",MINOR(dev));","","	return 0;","}","","static void __exit cleanup_mod(void)","{	","	int i;","","        for (i = 0; i < 2; i++) {","                del_timer(&data[i].timer);","        }","	cdev_del(&cdv);","	device_destroy(cls, dev);","	class_destroy(cls);","	unregister_chrdev_region(dev, 1);","	printk(KERN_INFO \"%s is unloaded. major:%d\\n\",__FILE__,MAJOR(dev));","}","","module_init(init_mod);","module_exit(cleanup_mod);"
+"3	LINE	0
+	
+	MODULE_AUTHOR("Yuta Hatakeyama");
+	MODULE_DESCRIPTION("driver for LED control");
+	MODULE_LICENSE("GPL");
+	MODULE_VERSION("0.1");
+	
+	static dev_t dev;
+	static struct cdev cdv;
+	static struct class *cls = NULL;
+	static volatile u32 *gpio_base = NULL;
+	
+	struct mytimer_data { 
+	        char *name;
+	        int interval;
+	        struct timer_list timer;
+	};
+	struct mytimer_data data[2] = {
+	        {
+	                .name = "foo",
+	                .interval = 1,
+	        },
+	        {
+	                .name = "bar",
+	                .interval = 1,
+	        },
+	};
+	
+	static void led_off(unsigned long arg){
+		struct mytimer_data *data = (struct mytimer_data *)arg;
+		gpio_base[10] = 1 << 25;
+		mod_timer(&data->timer, jiffies + data->interval*HZ);
+	}
+	
+	static void led_on(unsigned long arg){
+		struct mytimer_data *data = (struct mytimer_data *)arg;
+		gpio_base[7] = 1 << 25;
+		mod_timer(&data->timer, jiffies + data->interval*HZ);
+	}
+	static void on_off(void){
+		int i;
+			for (i = 0; i < 2; i++){
+				struct mytimer_data *d = &data[i];
+				init_timer(&d->timer);
+				d->timer.expires = jiffies + d->interval * HZ;
+				d->timer.data = (unsigned long)d;
+				if(i == 0) 
+					d->timer.function = led_on;
+				else 
+					d->timer.function = led_off;
+					
+|3,0,3,1,50,0,1606995124,"","MODULE_AUTHOR(\"Yuta Hatakeyama\");","MODULE_DESCRIPTION(\"driver for LED control\");","MODULE_LICENSE(\"GPL\");","MODULE_VERSION(\"0.1\");","","static dev_t dev;","static struct cdev cdv;","static struct class *cls = NULL;","static volatile u32 *gpio_base = NULL;","","struct mytimer_data { ","        char *name;","        int interval;","        struct timer_list timer;","};","struct mytimer_data data[2] = {","        {",>34
+|<"                .name = \"foo\",","                .interval = 1,","        },","        {","                .name = \"bar\",","                .interval = 1,","        },","};","","static void led_off(unsigned long arg){","	struct mytimer_data *data = (struct mytimer_data *)arg;","	gpio_base[10] = 1 << 25;","	mod_timer(&data->timer, jiffies + data->interval*HZ);","}","","static void led_on(unsigned long arg){","	struct mytimer_data *data = (struct mytimer_data *)arg;",>26
+|<"	gpio_base[7] = 1 << 25;","	mod_timer(&data->timer, jiffies + data->interval*HZ);","}","static void on_off(void){","	int i;","		for (i = 0; i < 2; i++){","			struct mytimer_data *d = &data[i];","			init_timer(&d->timer);","			d->timer.expires = jiffies + d->interval * HZ;","			d->timer.data = (unsigned long)d;","			if(i == 0) ","				d->timer.function = led_on;","			else ","				d->timer.function = led_off;","				"
+"4	LINE	0
+	#include <linux/timer.h>
+|3,0,4,1,1,0,1606995118,"#include <linux/timer.h>"
+"5	LINE	0
+	#include <linux/io.h>
+|3,0,5,1,1,0,1606995117,"#include <linux/io.h>"
+"6	LINE	0
+	#include <linux/uaccess.h>
+|3,0,6,1,1,0,1606995117,"#include <linux/uaccess.h>"
+"7	LINE	0
+	#include <linux/device.h>
+|3,0,7,1,1,0,1606995117,"#include <linux/device.h>"
+"8	LINE	0
+	#include <linux/cdev.h>
+|3,0,8,1,1,0,1606995116,"#include <linux/cdev.h>"
+"9	LINE	0
+	#include <linux/fs.h>
+|3,0,9,1,1,0,1606995116,"#include <linux/fs.h>"
+"-	CHAR	0
+	(
+|3,0,36,0,1,0,1606658051,"("
+
+# ファイルマーク:
+'0  7  0  ~/RoboSys_kadai1/Makefile
+|4,48,7,0,1607045148,"~/RoboSys_kadai1/Makefile"
+'1  1  140  ~/RoboSys_kadai1/Makefile
+|4,49,1,140,1607044595,"~/RoboSys_kadai1/Makefile"
+'2  7  32  ~/RoboSys_kadai1/Makefile
+|4,50,7,32,1607044595,"~/RoboSys_kadai1/Makefile"
+'3  1  33  ~/RoboSys_kadai1/Makefile
+|4,51,1,33,1607044503,"~/RoboSys_kadai1/Makefile"
+'4  1  33  ~/RoboSys_kadai1/Makefile
+|4,52,1,33,1607044503,"~/RoboSys_kadai1/Makefile"
+'5  4  0  ~/RoboSys_kadai1/Makefile
+|4,53,4,0,1607044503,"~/RoboSys_kadai1/Makefile"
+'6  4  0  ~/RoboSys_kadai1/Makefile
+|4,54,4,0,1607044503,"~/RoboSys_kadai1/Makefile"
+'7  1  108  ~/RoboSys_kadai1/Makefile
+|4,55,1,108,1607044470,"~/RoboSys_kadai1/Makefile"
+'8  1  108  ~/RoboSys_kadai1/Makefile
+|4,56,1,108,1607044470,"~/RoboSys_kadai1/Makefile"
+'9  1  108  ~/RoboSys_kadai1/Makefile
+|4,57,1,108,1607044470,"~/RoboSys_kadai1/Makefile"
+
+# ジャンプリスト (新しいものが先):
+-'  7  0  ~/RoboSys_kadai1/Makefile
+|4,39,7,0,1607045148,"~/RoboSys_kadai1/Makefile"
+-'  1  0  ~/RoboSys_kadai1/Makefile
+|4,39,1,0,1607044960,"~/RoboSys_kadai1/Makefile"
+-'  7  32  ~/RoboSys_kadai1/Makefile
+|4,39,7,32,1607044595,"~/RoboSys_kadai1/Makefile"
+-'  4  0  ~/RoboSys_kadai1/Makefile
+|4,39,4,0,1607044529,"~/RoboSys_kadai1/Makefile"
+-'  4  0  ~/RoboSys_kadai1/Makefile
+|4,39,4,0,1607044503,"~/RoboSys_kadai1/Makefile"
+-'  7  0  ~/RoboSys_kadai1/Makefile
+|4,39,7,0,1607044478,"~/RoboSys_kadai1/Makefile"
+-'  7  0  ~/RoboSys_kadai1/Makefile
+|4,39,7,0,1607044470,"~/RoboSys_kadai1/Makefile"
+-'  1  0  ~/RoboSys_kadai1/Makefile
+|4,39,1,0,1607044453,"~/RoboSys_kadai1/Makefile"
+-'  1  0  ~/RoboSys_kadai1/Makefile
+|4,39,1,0,1607044453,"~/RoboSys_kadai1/Makefile"
+-'  1  0  ~/RoboSys_kadai1/Makefile
+|4,39,1,0,1607044453,"~/RoboSys_kadai1/Makefile"
+-'  1  0  ~/myled/myled.c
+|4,39,1,0,1607044256,"~/myled/myled.c"
+-'  1  0  ~/myled/myled.c
+|4,39,1,0,1607044256,"~/myled/myled.c"
+-'  1  0  ~/myled/myled.c
+|4,39,1,0,1607044256,"~/myled/myled.c"
+-'  1  0  ~/myled/myled.c
+|4,39,1,0,1607044256,"~/myled/myled.c"
+-'  1  0  ~/myled/myled.c
+|4,39,1,0,1607044256,"~/myled/myled.c"
+-'  1  0  ~/myled/myled.c
+|4,39,1,0,1607044256,"~/myled/myled.c"
+-'  1  0  ~/myled/myled.c
+|4,39,1,0,1607044256,"~/myled/myled.c"
+-'  1  0  ~/myled/myled.c
+|4,39,1,0,1607044256,"~/myled/myled.c"
+-'  1  0  ~/myled/myled.c
+|4,39,1,0,1607044256,"~/myled/myled.c"
+-'  1  0  ~/myled/myled.c
+|4,39,1,0,1607044256,"~/myled/myled.c"
+-'  1  0  ~/myled/myled.c
+|4,39,1,0,1607044256,"~/myled/myled.c"
+-'  1  0  ~/myled/myled.c
+|4,39,1,0,1607044256,"~/myled/myled.c"
+-'  1  0  ~/myled/myled.c
+|4,39,1,0,1607044256,"~/myled/myled.c"
+-'  1  0  ~/myled/myled.c
+|4,39,1,0,1607044256,"~/myled/myled.c"
+-'  1  0  ~/myled/myled.c
+|4,39,1,0,1607044256,"~/myled/myled.c"
+-'  1  0  ~/myled/myled.c
+|4,39,1,0,1607044256,"~/myled/myled.c"
+-'  14  21  ~/myled/myled.c
+|4,39,14,21,1607043983,"~/myled/myled.c"
+-'  14  21  ~/myled/myled.c
+|4,39,14,21,1607043983,"~/myled/myled.c"
+-'  14  21  ~/myled/myled.c
+|4,39,14,21,1607043983,"~/myled/myled.c"
+-'  14  21  ~/myled/myled.c
+|4,39,14,21,1607043983,"~/myled/myled.c"
+-'  14  21  ~/myled/myled.c
+|4,39,14,21,1607043983,"~/myled/myled.c"
+-'  14  21  ~/myled/myled.c
+|4,39,14,21,1607043983,"~/myled/myled.c"
+-'  14  21  ~/myled/myled.c
+|4,39,14,21,1607043983,"~/myled/myled.c"
+-'  14  21  ~/myled/myled.c
+|4,39,14,21,1607043983,"~/myled/myled.c"
+-'  14  21  ~/myled/myled.c
+|4,39,14,21,1607043983,"~/myled/myled.c"
+-'  14  21  ~/myled/myled.c
+|4,39,14,21,1607043983,"~/myled/myled.c"
+-'  14  21  ~/myled/myled.c
+|4,39,14,21,1607043983,"~/myled/myled.c"
+-'  14  21  ~/myled/myled.c
+|4,39,14,21,1607043983,"~/myled/myled.c"
+-'  14  21  ~/myled/myled.c
+|4,39,14,21,1607043983,"~/myled/myled.c"
+-'  14  21  ~/myled/myled.c
+|4,39,14,21,1607043983,"~/myled/myled.c"
+-'  14  21  ~/myled/myled.c
+|4,39,14,21,1607043983,"~/myled/myled.c"
+-'  14  21  ~/myled/myled.c
+|4,39,14,21,1607043983,"~/myled/myled.c"
+-'  7  59  ~/myled/Makefile
+|4,39,7,59,1607043964,"~/myled/Makefile"
+-'  7  59  ~/myled/Makefile
+|4,39,7,59,1607043964,"~/myled/Makefile"
+-'  7  59  ~/myled/Makefile
+|4,39,7,59,1607043964,"~/myled/Makefile"
+-'  7  59  ~/myled/Makefile
+|4,39,7,59,1607043964,"~/myled/Makefile"
+-'  7  59  ~/myled/Makefile
+|4,39,7,59,1607043964,"~/myled/Makefile"
+-'  7  59  ~/myled/Makefile
+|4,39,7,59,1607043964,"~/myled/Makefile"
+-'  7  59  ~/myled/Makefile
+|4,39,7,59,1607043964,"~/myled/Makefile"
+-'  7  59  ~/myled/Makefile
+|4,39,7,59,1607043964,"~/myled/Makefile"
+-'  7  59  ~/myled/Makefile
+|4,39,7,59,1607043964,"~/myled/Makefile"
+-'  7  59  ~/myled/Makefile
+|4,39,7,59,1607043964,"~/myled/Makefile"
+-'  7  59  ~/myled/Makefile
+|4,39,7,59,1607043964,"~/myled/Makefile"
+-'  7  59  ~/myled/Makefile
+|4,39,7,59,1607043964,"~/myled/Makefile"
+-'  7  59  ~/myled/Makefile
+|4,39,7,59,1607043964,"~/myled/Makefile"
+-'  7  59  ~/myled/Makefile
+|4,39,7,59,1607043964,"~/myled/Makefile"
+-'  7  59  ~/myled/Makefile
+|4,39,7,59,1607043964,"~/myled/Makefile"
+-'  7  59  ~/myled/Makefile
+|4,39,7,59,1607043964,"~/myled/Makefile"
+-'  7  59  ~/myled/Makefile
+|4,39,7,59,1607043964,"~/myled/Makefile"
+-'  7  59  ~/myled/Makefile
+|4,39,7,59,1607043964,"~/myled/Makefile"
+-'  7  59  ~/myled/Makefile
+|4,39,7,59,1607043964,"~/myled/Makefile"
+-'  7  59  ~/myled/Makefile
+|4,39,7,59,1607043964,"~/myled/Makefile"
+-'  7  59  ~/myled/Makefile
+|4,39,7,59,1607043964,"~/myled/Makefile"
+-'  7  59  ~/myled/Makefile
+|4,39,7,59,1607043964,"~/myled/Makefile"
+-'  7  59  ~/myled/Makefile
+|4,39,7,59,1607043964,"~/myled/Makefile"
+-'  7  59  ~/myled/Makefile
+|4,39,7,59,1607043964,"~/myled/Makefile"
+-'  7  59  ~/myled/Makefile
+|4,39,7,59,1607043964,"~/myled/Makefile"
+-'  7  59  ~/myled/Makefile
+|4,39,7,59,1607043964,"~/myled/Makefile"
+-'  7  59  ~/myled/Makefile
+|4,39,7,59,1607043964,"~/myled/Makefile"
+-'  7  59  ~/myled/Makefile
+|4,39,7,59,1607043964,"~/myled/Makefile"
+-'  7  59  ~/myled/Makefile
+|4,39,7,59,1607043964,"~/myled/Makefile"
+-'  7  59  ~/myled/Makefile
+|4,39,7,59,1607043964,"~/myled/Makefile"
+-'  7  59  ~/myled/Makefile
+|4,39,7,59,1607043964,"~/myled/Makefile"
+-'  7  59  ~/myled/Makefile
+|4,39,7,59,1607043964,"~/myled/Makefile"
+-'  14  21  ~/myled/myled.c
+|4,39,14,21,1607006165,"~/myled/myled.c"
+-'  14  21  ~/myled/myled.c
+|4,39,14,21,1607006165,"~/myled/myled.c"
+-'  14  21  ~/myled/myled.c
+|4,39,14,21,1607006165,"~/myled/myled.c"
+-'  14  21  ~/myled/myled.c
+|4,39,14,21,1607006165,"~/myled/myled.c"
+-'  14  21  ~/myled/myled.c
+|4,39,14,21,1607006165,"~/myled/myled.c"
+-'  14  21  ~/myled/myled.c
+|4,39,14,21,1607006165,"~/myled/myled.c"
+-'  14  21  ~/myled/myled.c
+|4,39,14,21,1607006165,"~/myled/myled.c"
+-'  14  21  ~/myled/myled.c
+|4,39,14,21,1607006165,"~/myled/myled.c"
+-'  14  21  ~/myled/myled.c
+|4,39,14,21,1607006165,"~/myled/myled.c"
+-'  14  21  ~/myled/myled.c
+|4,39,14,21,1607006165,"~/myled/myled.c"
+-'  14  21  ~/myled/myled.c
+|4,39,14,21,1607006165,"~/myled/myled.c"
+-'  14  21  ~/myled/myled.c
+|4,39,14,21,1607006165,"~/myled/myled.c"
+-'  14  21  ~/myled/myled.c
+|4,39,14,21,1607006165,"~/myled/myled.c"
+-'  14  21  ~/myled/myled.c
+|4,39,14,21,1607006165,"~/myled/myled.c"
+-'  14  21  ~/myled/myled.c
+|4,39,14,21,1607006165,"~/myled/myled.c"
+-'  14  21  ~/myled/myled.c
+|4,39,14,21,1607006165,"~/myled/myled.c"
+-'  14  21  ~/myled/myled.c
+|4,39,14,21,1607006165,"~/myled/myled.c"
+-'  14  21  ~/myled/myled.c
+|4,39,14,21,1607006165,"~/myled/myled.c"
+-'  14  21  ~/myled/myled.c
+|4,39,14,21,1607006165,"~/myled/myled.c"
+-'  14  21  ~/myled/myled.c
+|4,39,14,21,1607006165,"~/myled/myled.c"
+-'  14  21  ~/myled/myled.c
+|4,39,14,21,1607006165,"~/myled/myled.c"
+-'  14  21  ~/myled/myled.c
+|4,39,14,21,1607006165,"~/myled/myled.c"
+-'  14  21  ~/myled/myled.c
+|4,39,14,21,1607006165,"~/myled/myled.c"
+-'  14  21  ~/myled/myled.c
+|4,39,14,21,1607006165,"~/myled/myled.c"
+-'  14  21  ~/myled/myled.c
+|4,39,14,21,1607006165,"~/myled/myled.c"
+-'  14  21  ~/myled/myled.c
+|4,39,14,21,1607006165,"~/myled/myled.c"
+
+# ファイル内マークの履歴 (新しいものから古いもの):
+
+> ~/RoboSys_kadai1/Makefile
+	*	1607045145	0
+	"	7	0
+	^	7	1
+	.	7	40
+	+	1	33
+	+	1	108
+	+	1	16
+	+	1	108
+	+	1	94
+	+	1	56
+	+	1	131
+	+	1	108
+	+	1	33
+	+	1	81
+	+	7	40
+
+> ~/myled/myled.c
+	*	1607044255	0
+	"	1	0
+	^	14	22
+	.	14	16
+	+	20	68
+	+	20	27
+	+	20	130
+	+	20	2
+	+	20	1
+	+	20	37
+	+	20	0
+	+	20	51
+	+	20	78
+	+	20	100
+	+	20	127
+	+	20	7
+	+	20	46
+	+	20	94
+	+	20	13
+	+	20	18
+	+	20	82
+	+	20	125
+	+	20	154
+	+	20	155
+	+	20	8
+	+	20	52
+	+	20	77
+	+	20	128
+	+	20	127
+	+	20	1
+	+	20	2
+	+	20	0
+	+	20	2
+	+	20	9
+	+	20	39
+	+	20	54
+	+	20	79
+	+	20	82
+	+	20	103
+	+	20	129
+	+	20	130
+	+	20	16
+	+	20	44
+	+	20	92
+	+	20	130
+	+	20	0
+	+	20	64
+	+	22	0
+	+	28	16
+	+	29	0
+	+	54	0
+	+	20	94
+	+	20	95
+	+	20	952
+	+	102	0
+	+	101	34
+	+	101	62
+	+	101	63
+	+	20	806
+	+	20	756
+	+	20	731
+	+	20	875
+	+	20	915
+	+	20	806
+	+	20	805
+	+	20	730
+	+	20	811
+	+	20	742
+	+	20	810
+	+	21	0
+	+	102	0
+	+	6	21
+	+	7	22
+	+	25	6
+	+	34	18
+	+	34	36
+	+	37	26
+	+	38	15
+	+	43	1
+	+	40	27
+	+	41	14
+	+	34	31
+	+	38	10
+	+	41	10
+	+	38	3
+	+	41	3
+	+	38	10
+	+	41	10
+	+	38	3
+	+	41	3
+	+	35	1
+	+	34	18
+	+	43	0
+	+	35	12
+	+	38	10
+	+	41	10
+	+	43	18
+	+	44	0
+	+	35	0
+	+	51	17
+	+	47	31
+	+	50	31
+	+	11	15
+	+	14	16
+
+> ~/myled/Makefile
+	*	1607043809	0
+	"	7	59
+	^	7	60
+	.	7	59
+	+	4	62
+	+	7	2
+	+	6	6
+	+	7	0
+	+	4	0
+	+	7	0
+	+	7	59
+
+> ~/robosyskadai1/myled.ko
+	*	1607003091	0
+	"	1	0
+
+> ~/robosyskadai1/Makefile
+	*	1607002904	0
+	"	1	0
+
+> ~/robosyskadai1/myled.c
+	*	1607002837	0
+	"	1	0
+
+> ~/myled/cp_myled.c
+	*	1606657048	0
+	"	90	0
+
+> ~/myled/M
+	*	1606614881	0
+	"	1	0
+
+> ~/myled/myled.
+	*	1606614872	0
+	"	3	31
+	^	3	32
+	.	3	32
+	+	13	24
+	+	12	22
+	+	8	36
+	+	3	32
+
+> ~/robosys/kadai_1/myled.c
+	*	1606612736	0
+	"	1	17
+	^	87	25
+	.	87	24
+	+	1	25
+	+	2	21
+	+	3	23
+	+	4	25
+	+	5	26
+	+	6	21
+	+	7	24
+	+	9	30
+	+	9	31
+	+	10	45
+	+	11	0
+	+	11	22
+	+	12	21
+	+	12	24
+	+	19	2632
+	+	13	0
+	+	14	5
+	+	14	17
+	+	18	0
+	+	19	2631
+	+	87	24
+
+> ~/robosys/kadai_1/Makefile
+	*	1606611077	0
+	"	7	18
+	^	7	19
+	.	7	19
+	+	7	40
+	+	3	59
+	+	7	43
+	+	3	17
+	+	4	0
+	+	7	19
+
+> ~/robosys/kadai_1/myled.ko
+	*	1606543222	0
+	"	1	0
+
+> ~/myled.ko
+	*	1606543124	0
+	"	1	0
+
+> ~/test/hoge.bash
+	*	1604679034	0
+	"	4	8
+	^	4	9
+	.	4	8
+	+	1	12
+	+	1	11
+	+	1	9
+	+	1	11
+	+	1	9
+	+	1	12
+	+	1	9
+	+	1	11
+	+	1	9
+	+	1	12
+	+	1	9
+	+	1	11
+	+	3	9
+	+	4	8
+
+> ~/hoge
+	*	1602913901	0
+	"	1	0
+
+> /tmp/tutorzcH5lR
+	*	1602913871	0
+	"	71	0
+	^	43	24
+	.	43	24
+	+	45	0
+	+	43	24
+
+> ~/test/hoge
+	*	1602912726	0
+	"	7	0
+	^	6	0
+	.	5	3
+	+	5	3
+
+> ~/hoge.py
+	*	1602771134	0
+	"	6	0
+	^	6	0
+	.	6	0
+	+	3	4
+	+	1	18
+	+	3	11
+	+	9	0
+	+	3	12
+	+	8	0
+	+	1	1
+	+	3	13
+	+	6	0
+
+> ~/hoge.c
+	*	1602770370	0
+	"	12	0
+	^	12	0
+	.	13	0
+	+	1	17
+	+	3	12
+	+	8	0
+	+	1	17
+	+	13	0
+
+> /tmp/tutorgZE1xQ
+	*	1602769769	0
+	"	63	2
+	^	26	0
+	.	26	0
+	+	37	0
+	+	35	0
+	+	23	0
+	+	26	0
