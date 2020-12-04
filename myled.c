@@ -8,7 +8,7 @@
 
 
 
-MODULE_AUTHOR("Tatsuki Inoue");
+MODULE_AUTHOR("Tatsuki Inoue + Ryuichi Ueda");
 MODULE_DESCRIPTION("driver for LED control");
 MODULE_LICENSE("GPL");
 MODULE_VERSION("0.1");
